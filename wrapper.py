@@ -3,6 +3,9 @@ import requests
 import inital
 import shutil
 
+# list of schools API
+school = requests.get("https://web.mashov.info/api/schools")
+listOfSchools = json.loads(school.text)
 
 # gets average of grades
 def getGradesAvg():
@@ -15,7 +18,6 @@ def getGradesAvg():
         try:
             sumofgrades += float(grade['grade'])
         except:
-            print("No Grade")
             gradecount = gradecount-1
     avg = sumofgrades / gradecount
     return avg
@@ -40,7 +42,20 @@ def get_class_list():
     print(name_list)
     print(len(name_list))
 
-# Todo Bagrut Grades
+def getBagrut():
+    url = inital.BASEURL + "bagrut/grades"
+    response = requests.request("GET", url, data=inital.payload (), headers=inital.getHeader ('GET'))
+    bagrutGrades = json.loads(response.text)
+    for grade in bagrutGrades:
+        try:
+            print(f"{grade['name']}->{grade['final']}")
+        except:
+            continue
+
+def getSchools():
+    for school in listOfSchools:
+        print(f"{school['name']} -> {school['semel']}")
+
 # Todo Timetable
 # Todo Messages
 # ect'
