@@ -2,6 +2,7 @@ import json
 import requests
 import inital
 import shutil
+import matplotlib.pyplot as plt
 
 # list of schools API
 school = requests.get("https://web.mashov.info/api/schools")
@@ -21,6 +22,66 @@ def getGradesAvg():
             gradecount = gradecount-1
     avg = sumofgrades / gradecount
     return avg
+
+def getSubjectList():
+    url = inital.BASEURL + "grades"
+    response = requests.request("GET", url, data=inital.payload(), headers=inital.getHeader('GET'))
+    grades = json.loads(response.text)
+    gl=[]
+    for grade in grades:
+        try:
+            if grade['subjectName'] not in gl:
+                gl.append(grade['subjectName'])
+        except:
+            continue
+    print(gl)
+
+
+
+def getGradesGraphBySubject(subject=None):
+    if subject == None:
+        print("call me with one of the subjects from the list given in geSubjectList!")
+        return 0
+    if type(subject) != str:
+        print('subject must be of type string!')
+        return 0
+    url = inital.BASEURL + "grades"
+    response = requests.request("GET", url, data=inital.payload(), headers=inital.getHeader('GET'))
+    grades = json.loads(response.text)
+    gi=1
+    gx,gy=[],[]
+    for grade in grades:
+        try:
+            if grade['subjectName'] == subject:
+                gy.append(int(grade['grade']))
+                gx.append(gi)
+                gi+=1
+        except:
+            continue
+    plt.title('grades in '+subject[::-1])
+    plt.ylim(0,105)
+    plt.plot(gx,gy,'b-')
+    plt.plot(gx, gy, 'b.')
+    plt.show()
+
+def getGradesGraphAll():
+    url = inital.BASEURL + "grades"
+    response = requests.request("GET", url, data=inital.payload(), headers=inital.getHeader('GET'))
+    grades = json.loads(response.text)
+    gi=1
+    gx,gy=[],[]
+    for grade in grades:
+        try:
+            gy.append(int(grade['grade']))
+            gx.append(gi)
+            gi+=1
+        except:
+            continue
+    plt.title('grades in all subjects')
+    plt.ylim(0,105)
+    plt.plot(gx,gy,'b-')
+    plt.plot(gx, gy, 'b.')
+    plt.show()
 
 
 # gets user picture
