@@ -43,6 +43,8 @@ Will self host wrapper on server or distribute to npm / pip
 ## Features
 > 📌 Get Average of All Grades
 
+> 📌 Get All Grades in graph format also by subject
+
 > 📌 Get Average of All Bagrut Grades
 
 > 📌 Get All Schools
